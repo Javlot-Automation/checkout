@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Risk panel toggle
   function toggleRiskPanel() {
     riskPanelOpen = !riskPanelOpen;
-    
+
     if (riskPanelOpen) {
       riskToggleBtn.classList.add("jp-active");
       riskSection.classList.add("jp-visible");
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function updateToggleBorderColor() {
     if (!riskPanelOpen) return;
-    
+
     const riskPercent = parseInt(riskSlider.value);
     if (riskPercent <= 30) {
       riskToggleBtn.style.borderColor = "";
@@ -110,19 +110,19 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateRiskUI(riskPercent) {
     riskValueEl.textContent = riskPercent + "%";
     exposureTextEl.textContent = riskPercent + "%";
-    
+
     const fillPercent = ((riskPercent - 15) / 85) * 100;
     sliderFill.style.width = fillPercent + "%";
     sliderThumb.style.left = fillPercent + "%";
-    
+
     // Reset classes
     riskSection.classList.remove("jp-state-green", "jp-state-yellow", "jp-state-red", "jp-border-warning", "jp-border-danger");
     riskBadge.classList.remove("jp-badge-warning", "jp-badge-danger");
     riskWarning.classList.remove("jp-visible", "jp-warning-danger");
     estimatedEl.classList.remove("jp-result-green", "jp-result-yellow", "jp-result-red");
-    
+
     let stateClass, badgeText, showWarning = false, dangerWarning = false, resultColorClass;
-    
+
     if (riskPercent <= 30) {
       stateClass = "jp-state-green";
       badgeText = t("recommended");
@@ -149,18 +149,18 @@ document.addEventListener("DOMContentLoaded", function () {
       dangerWarning = true;
       warningText.textContent = t("warning_extreme");
     }
-    
+
     riskSection.classList.add(stateClass);
     riskBadge.textContent = badgeText;
     estimatedEl.classList.add(resultColorClass);
-    
+
     if (showWarning) {
       riskWarning.classList.add("jp-visible");
       if (dangerWarning) {
         riskWarning.classList.add("jp-warning-danger");
       }
     }
-    
+
     updateToggleBorderColor();
     updateEstimatedResult();
   }
@@ -168,11 +168,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // Update estimated result
   function updateEstimatedResult() {
     if (currentCapitalMin <= 0) return;
-    
+
     const riskPercent = parseInt(riskSlider.value);
     const multiplier = getRiskMultiplier(riskPercent);
     const estimatedMonthly = currentCapitalMin * basePerformance * multiplier;
-    
+
     estimatedEl.textContent = "+" + formatEuroDecimal(estimatedMonthly) + " /month";
   }
 
@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
       const payload = {
         tier: currentTier,
-        capital: currentCapitalMin,
+        balance: currentCapitalMin, // API expects 'balance'
         // Calculate the fee again just in case or grab from context if needed. 
         // The Monthly Fee logic: 19.90 + (tier - 1) * 20
         monthlyFee: 19.90 + (currentTier - 1) * 20,
@@ -280,28 +280,36 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
+        // Try to read error message from JSON if available
+        let errorMessage = `Server error: ${response.status}`;
+        try {
+          const errorData = await response.json();
+          if (errorData.error) errorMessage = errorData.error;
+        } catch (e) {
+          // ignore JSON parse error
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
 
-      if (data && data.url) {
-        window.location.href = data.url;
+      if (data && data.checkout_url) {
+        window.location.href = data.checkout_url;
       } else {
         throw new Error("No checkout URL received");
       }
 
     } catch (error) {
       console.error("Checkout error:", error);
-      alert("An error occurred while creating your checkout session. Please try again.");
-      
+      alert(`Error: ${error.message}`); // Show specific error to user
+
       // Reset button state
       ctaButton.disabled = false;
       // Re-apply translation or original text
       // Since we don't have a reliable way to get the original translation text easily without re-running `t()`, 
       // let's try to fetch it again or just reload the page/state. 
       // Actually, t() is available globally as seen in updateRiskUI.
-      ctaButton.querySelector("span").textContent = t("cta_button"); 
+      ctaButton.querySelector("span").textContent = t("cta_button");
     }
   }
 
@@ -321,7 +329,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   if (riskSlider) {
-    riskSlider.addEventListener("input", function() {
+    riskSlider.addEventListener("input", function () {
       updateRiskUI(parseInt(this.value));
     });
     updateRiskUI(30);
