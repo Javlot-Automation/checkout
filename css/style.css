@@ -1,5 +1,7 @@
 /* Base Reset */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -23,6 +25,59 @@ body {
   min-height: 100vh;
 }
 
+/* Navbar */
+.navbar {
+  background-color: #fff;
+  padding: 16px 24px;
+  position: relative;
+  z-index: 100;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.navbar-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 48px;
+}
+
+.navbar-left,
+.navbar-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-right {
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.navbar-logo {
+  height: 24px;
+  width: auto;
+  display: block;
+}
+
+.nav-button {
+  background: #1a1a1a;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.nav-button:hover {
+  background: #000;
+}
+
 /* Page Layout */
 .page-container {
   max-width: 600px;
@@ -39,39 +94,24 @@ body {
 }
 
 .page-title {
-  font-size: 48px;
+  font-size: 80px;
   font-weight: 800;
   color: var(--color-text);
   margin-bottom: 16px;
   letter-spacing: -0.03em;
-  line-height: 1.1;
+  line-height: 90px;
   text-transform: uppercase;
 }
 
 .page-subtitle {
-  font-size: 17px;
+  font-size: 16px;
   color: var(--color-text-secondary);
   max-width: 480px;
   margin: 0 auto;
-  line-height: 1.6;
+  line-height: 24px;
 }
 
-.page-footer {
-  margin-top: auto;
-  padding-top: 32px;
-  text-align: center;
-}
 
-.page-footer a {
-  font-size: 13px;
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.page-footer a:hover {
-  color: var(--color-text);
-}
 
 /* Widget Container */
 .javlot-pricing-widget {
@@ -174,264 +214,34 @@ body {
   color: var(--color-text);
 }
 
-.jp-result-green { color: var(--color-green) !important; }
-.jp-result-yellow { color: var(--color-yellow) !important; }
-.jp-result-red { color: var(--color-red) !important; }
-
-/* Risk Toggle Button */
-.jp-risk-toggle {
-  margin-bottom: 16px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease 0.05s, transform 0.3s ease 0.05s;
-  pointer-events: none;
+.jp-result-green {
+  color: var(--color-green) !important;
 }
 
-.jp-risk-toggle.jp-visible {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
+.jp-result-yellow {
+  color: var(--color-yellow) !important;
 }
 
-.jp-risk-toggle-btn {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 14px 18px;
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  font-family: inherit;
+.jp-result-red {
+  color: var(--color-red) !important;
+}
+
+.jp-risk-message {
+  font-size: 13px;
   color: var(--color-text-secondary);
-  transition: all 0.2s ease;
-}
-
-.jp-risk-toggle-btn:hover {
-  border-color: #d1d5db;
-  color: var(--color-text);
-}
-
-.jp-risk-toggle-btn.jp-active {
-  color: var(--color-text);
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom-color: transparent;
-}
-
-.jp-toggle-icon {
-  width: 20px;
-  height: 20px;
-  transition: transform 0.3s ease;
-}
-
-.jp-risk-toggle-btn.jp-active .jp-toggle-icon {
-  transform: rotate(180deg);
-}
-
-/* Risk Section */
-.jp-risk-section {
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-top: none;
-  border-radius: 0 0 10px 10px;
-  padding: 20px;
-  margin-top: -16px;
-  margin-bottom: 16px;
+  text-align: center;
+  margin-top: 24px;
+  font-weight: 400;
+  line-height: 1.5;
   opacity: 0;
-  max-height: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  overflow: hidden;
-  transition: all 0.3s ease, border-color 0.3s ease;
-  pointer-events: none;
+  transition: opacity 0.3s ease 0.1s;
 }
 
-.jp-risk-section.jp-visible {
+.jp-risk-message.jp-visible {
   opacity: 1;
-  max-height: 400px;
-  padding: 20px;
-  pointer-events: auto;
-}
-
-.jp-risk-section.jp-border-warning {
-  border-color: var(--color-yellow);
-}
-
-.jp-risk-section.jp-border-danger {
-  border-color: var(--color-red);
-}
-
-.jp-risk-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.jp-risk-title {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-}
-
-.jp-risk-value-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.jp-risk-value {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--color-text);
-  line-height: 1;
-  min-width: 56px;
-  text-align: right;
-  transition: color 0.3s ease;
-}
-
-.jp-risk-badge {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  padding: 5px 10px;
-  border-radius: 6px;
-  background: rgba(16, 185, 129, 0.1);
-  color: var(--color-green);
-  transition: all 0.3s ease;
-}
-
-.jp-risk-badge.jp-badge-warning {
-  background: rgba(245, 158, 11, 0.1);
-  color: var(--color-yellow);
-}
-
-.jp-risk-badge.jp-badge-danger {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--color-red);
-}
-
-/* Slider */
-.jp-slider-wrapper {
-  margin-bottom: 20px;
-  transition: opacity 0.3s ease;
-}
-
-.jp-slider-wrapper.jp-slider-disabled {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.jp-slider-container {
-  position: relative;
-  height: 32px;
-  display: flex;
-  align-items: center;
-}
-
-.jp-risk-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  cursor: pointer;
-  position: absolute;
-  z-index: 3;
-  margin: 0;
-}
-
-.jp-risk-slider:disabled {
-  cursor: not-allowed;
-}
-
-.jp-risk-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  background: transparent;
-  cursor: pointer;
-}
-
-.jp-risk-slider:disabled::-webkit-slider-thumb {
-  cursor: not-allowed;
-}
-
-.jp-risk-slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-.jp-risk-slider:disabled::-moz-range-thumb {
-  cursor: not-allowed;
-}
-
-.jp-slider-track {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 6px;
-  transform: translateY(-50%);
-  background: #e5e7eb;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.jp-slider-fill {
-  height: 100%;
-  width: 17.6%;
-  background: var(--color-green);
-  border-radius: 3px;
-  transition: background 0.3s ease;
-}
-
-.jp-slider-thumb {
-  position: absolute;
-  top: 50%;
-  left: 17.6%;
-  width: 20px;
-  height: 20px;
-  background: #fff;
-  border: 2px solid var(--color-green);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  pointer-events: none;
-  z-index: 2;
-  transition: border-color 0.3s ease, transform 0.15s ease;
-}
-
-.jp-slider-wrapper:not(.jp-slider-disabled) .jp-slider-container:hover .jp-slider-thumb {
-  transform: translate(-50%, -50%) scale(1.1);
-}
-
-.jp-risk-labels {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-  font-size: 12px;
-  color: #9ca3af;
 }
 
 /* iOS-style Toggle Switch */
-.jp-acknowledge {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  cursor: pointer;
-  margin-bottom: 16px;
-}
-
 .jp-toggle-switch {
   position: relative;
   flex-shrink: 0;
@@ -470,11 +280,11 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.jp-toggle-input:checked + .jp-toggle-slider {
+.jp-toggle-input:checked+.jp-toggle-slider {
   background-color: var(--color-green);
 }
 
-.jp-toggle-input:checked + .jp-toggle-slider::before {
+.jp-toggle-input:checked+.jp-toggle-slider::before {
   transform: translateX(20px);
 }
 
@@ -536,13 +346,29 @@ body {
 }
 
 /* State Colors for slider */
-.jp-state-yellow .jp-risk-value { color: var(--color-yellow); }
-.jp-state-yellow .jp-slider-fill { background: var(--color-yellow); }
-.jp-state-yellow .jp-slider-thumb { border-color: var(--color-yellow); }
+.jp-state-yellow .jp-risk-value {
+  color: var(--color-yellow);
+}
 
-.jp-state-red .jp-risk-value { color: var(--color-red); }
-.jp-state-red .jp-slider-fill { background: var(--color-red); }
-.jp-state-red .jp-slider-thumb { border-color: var(--color-red); }
+.jp-state-yellow .jp-slider-fill {
+  background: var(--color-yellow);
+}
+
+.jp-state-yellow .jp-slider-thumb {
+  border-color: var(--color-yellow);
+}
+
+.jp-state-red .jp-risk-value {
+  color: var(--color-red);
+}
+
+.jp-state-red .jp-slider-fill {
+  background: var(--color-red);
+}
+
+.jp-state-red .jp-slider-thumb {
+  border-color: var(--color-red);
+}
 
 /* CTA Section */
 .jp-cta-section {
@@ -571,6 +397,37 @@ body {
   font-family: inherit;
   cursor: pointer;
   transition: all 0.2s ease;
+  /* Animation Layout */
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.jp-cta-text {
+  grid-area: 1 / 1;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s ease;
+  white-space: nowrap;
+  pointer-events: none;
+  /* Let clicks pass through if needed, though button handles it */
+}
+
+/* Initial state or active state */
+.jp-cta-text.active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Entering from bottom */
+.jp-cta-text.enter {
+  transform: translateY(150%);
+  opacity: 0;
+}
+
+/* Exiting to top */
+.jp-cta-text.exit {
+  transform: translateY(-150%);
+  opacity: 0;
 }
 
 .jp-cta-button:hover:not(:disabled) {
@@ -625,12 +482,12 @@ body {
   transform: rotate(45deg);
 }
 
-.jp-terms-checkbox input:checked + .jp-terms-checkmark {
+.jp-terms-checkbox input:checked+.jp-terms-checkmark {
   background: var(--color-text);
   border-color: var(--color-text);
 }
 
-.jp-terms-checkbox input:checked + .jp-terms-checkmark::after {
+.jp-terms-checkbox input:checked+.jp-terms-checkmark::after {
   display: block;
 }
 
@@ -673,33 +530,33 @@ body {
   .page-container {
     padding: 40px 16px;
   }
-  
+
   .page-title {
     font-size: 32px;
   }
-  
+
   .page-subtitle {
     font-size: 15px;
   }
-  
+
   .jp-result-row {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
     padding: 14px 16px;
   }
-  
+
   .jp-risk-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-  
+
   .jp-risk-value-group {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .jp-risk-value {
     font-size: 28px;
   }

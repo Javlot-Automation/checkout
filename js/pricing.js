@@ -12,18 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const estimatedEl = document.getElementById("jp-estimated");
   const exposureTextEl = document.getElementById("jp-exposure-text");
   const disclaimerEl = document.getElementById("jp-disclaimer");
-  const riskToggle = document.getElementById("jp-risk-toggle");
-  const riskToggleBtn = document.getElementById("jp-risk-toggle-btn");
-  const riskSection = document.getElementById("jp-risk-section");
-  const riskSlider = document.getElementById("jp-risk-slider");
-  const riskValueEl = document.getElementById("jp-risk-value");
-  const riskBadge = document.getElementById("jp-risk-badge");
-  const sliderFill = document.getElementById("jp-slider-fill");
-  const sliderThumb = document.getElementById("jp-slider-thumb");
-  const sliderWrapper = document.getElementById("jp-slider-wrapper");
-  const acknowledgeCheckbox = document.getElementById("jp-acknowledge-checkbox");
-  const riskWarning = document.getElementById("jp-risk-warning");
-  const warningText = document.getElementById("jp-warning-text");
+  const riskMessage = document.getElementById("jp-risk-message");
   const ctaSection = document.getElementById("jp-cta-section");
   const ctaButton = document.getElementById("jp-cta-button");
   const termsCheckbox = document.getElementById("jp-terms-checkbox");
@@ -33,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentTier = 0;
   let hasValidCapital = false;
   const basePerformance = 0.0711;
-  let riskPanelOpen = false;
 
   // Update CTA button state
   function updateCTAState() {
@@ -65,127 +53,23 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Risk panel toggle
-  function toggleRiskPanel() {
-    riskPanelOpen = !riskPanelOpen;
-
-    if (riskPanelOpen) {
-      riskToggleBtn.classList.add("jp-active");
-      riskSection.classList.add("jp-visible");
-      updateToggleBorderColor();
-    } else {
-      riskToggleBtn.classList.remove("jp-active");
-      riskSection.classList.remove("jp-visible");
-      riskToggleBtn.style.borderColor = "";
-    }
-  }
-
-  function updateToggleBorderColor() {
-    if (!riskPanelOpen) return;
-
-    const riskPercent = parseInt(riskSlider.value);
-    if (riskPercent <= 30) {
-      riskToggleBtn.style.borderColor = "";
-    } else if (riskPercent <= 60) {
-      riskToggleBtn.style.borderColor = "var(--color-yellow)";
-    } else {
-      riskToggleBtn.style.borderColor = "var(--color-red)";
-    }
-  }
-
-  // Acknowledge checkbox handler
-  function handleAcknowledge() {
-    if (acknowledgeCheckbox.checked) {
-      sliderWrapper.classList.remove("jp-slider-disabled");
-      riskSlider.disabled = false;
-    } else {
-      sliderWrapper.classList.add("jp-slider-disabled");
-      riskSlider.disabled = true;
-      riskSlider.value = 30;
-      updateRiskUI(30);
-    }
-  }
-
-  // Update risk UI
-  function updateRiskUI(riskPercent) {
-    riskValueEl.textContent = riskPercent + "%";
-    exposureTextEl.textContent = riskPercent + "%";
-
-    const fillPercent = ((riskPercent - 15) / 85) * 100;
-    sliderFill.style.width = fillPercent + "%";
-    sliderThumb.style.left = fillPercent + "%";
-
-    // Reset classes
-    riskSection.classList.remove("jp-state-green", "jp-state-yellow", "jp-state-red", "jp-border-warning", "jp-border-danger");
-    riskBadge.classList.remove("jp-badge-warning", "jp-badge-danger");
-    riskWarning.classList.remove("jp-visible", "jp-warning-danger");
-    estimatedEl.classList.remove("jp-result-green", "jp-result-yellow", "jp-result-red");
-
-    let stateClass, badgeText, showWarning = false, dangerWarning = false, resultColorClass;
-
-    if (riskPercent <= 30) {
-      stateClass = "jp-state-green";
-      badgeText = t("recommended");
-      resultColorClass = "jp-result-green";
-    } else if (riskPercent <= 60) {
-      stateClass = "jp-state-yellow";
-      badgeText = t("high");
-      resultColorClass = "jp-result-yellow";
-      riskBadge.classList.add("jp-badge-warning");
-      riskSection.classList.add("jp-border-warning");
-      showWarning = true;
-      if (riskPercent > 50) {
-        warningText.textContent = t("warning_50");
-      } else {
-        warningText.textContent = t("warning_high");
-      }
-    } else {
-      stateClass = "jp-state-red";
-      badgeText = t("extreme");
-      resultColorClass = "jp-result-red";
-      riskBadge.classList.add("jp-badge-danger");
-      riskSection.classList.add("jp-border-danger");
-      showWarning = true;
-      dangerWarning = true;
-      warningText.textContent = t("warning_extreme");
-    }
-
-    riskSection.classList.add(stateClass);
-    riskBadge.textContent = badgeText;
-    estimatedEl.classList.add(resultColorClass);
-
-    if (showWarning) {
-      riskWarning.classList.add("jp-visible");
-      if (dangerWarning) {
-        riskWarning.classList.add("jp-warning-danger");
-      }
-    }
-
-    updateToggleBorderColor();
-    updateEstimatedResult();
-  }
-
   // Update estimated result
   function updateEstimatedResult() {
     if (currentCapitalMin <= 0) return;
 
-    const riskPercent = parseInt(riskSlider.value);
+    // Hardcoded risk level 30%
+    const riskPercent = 30;
     const multiplier = getRiskMultiplier(riskPercent);
     const estimatedMonthly = currentCapitalMin * basePerformance * multiplier;
 
     estimatedEl.textContent = "+" + formatEuroDecimal(estimatedMonthly) + " /month";
   }
 
-  // Hide all results
   function hideResults() {
     resultBox.classList.remove("jp-visible");
-    riskToggle.classList.remove("jp-visible");
-    riskSection.classList.remove("jp-visible");
+    if (riskMessage) riskMessage.classList.remove("jp-visible");
     disclaimerEl.classList.remove("jp-visible");
     ctaSection.classList.remove("jp-visible");
-    riskToggleBtn.classList.remove("jp-active");
-    riskToggleBtn.style.borderColor = "";
-    riskPanelOpen = false;
     currentCapitalMin = 0;
     currentTier = 0;
     hasValidCapital = false;
@@ -238,14 +122,14 @@ document.addEventListener("DOMContentLoaded", function () {
     monthlyFeeEl.textContent = formatEuroDecimal(monthlyFee) + " /month";
 
     resultBox.classList.add("jp-visible");
-    riskToggle.classList.add("jp-visible");
+    if (riskMessage) riskMessage.classList.add("jp-visible");
     disclaimerEl.classList.add("jp-visible");
     ctaSection.classList.add("jp-visible");
     hasValidCapital = true;
     updateCTAState();
     msg.textContent = "";
 
-    updateRiskUI(parseInt(riskSlider.value));
+    updateEstimatedResult();
   }
 
   // CTA button click - redirect to Stripe via Lambda
@@ -254,12 +138,57 @@ document.addEventListener("DOMContentLoaded", function () {
     if (ctaButton.disabled) return;
 
     // Loading state
-    const originalText = ctaButton.querySelector("span").innerText;
     ctaButton.disabled = true;
-    ctaButton.querySelector("span").innerText = "Loading..."; // Simple loading text
-    // Ideally we would use a translation key here, but for now hardcoded or reused is expected?
-    // Let's stick effectively to "Wait..." or similar if no key exists. 
-    // Actually, I'll keep it simple.
+
+    // We assume the initial text is in a visible span or we wrap it now
+    // If the button has just text, clear it and add a span
+    const initialText = ctaButton.innerText;
+    // Clear button content and add distinct span for initial text
+    ctaButton.innerHTML = "";
+    let currentSpan = document.createElement("span");
+    currentSpan.className = "jp-cta-text active";
+    currentSpan.textContent = initialText;
+    ctaButton.appendChild(currentSpan);
+
+    // Helpers for animation
+    let step = 1;
+    function updateLoadingText() {
+      const nextText = t(`loading_step${step}`);
+
+      // Create new span entering from bottom
+      const nextSpan = document.createElement("span");
+      nextSpan.className = "jp-cta-text enter";
+      nextSpan.textContent = nextText;
+      ctaButton.appendChild(nextSpan);
+
+      // Force reflow to ensure start position is applied
+      void nextSpan.offsetWidth;
+
+      requestAnimationFrame(() => {
+        currentSpan.classList.remove("active");
+        currentSpan.classList.add("exit");
+
+        nextSpan.classList.remove("enter");
+        nextSpan.classList.add("active");
+      });
+
+      // Cleanup old span after animation
+      setTimeout(() => {
+        if (currentSpan && currentSpan.parentNode === ctaButton) {
+          ctaButton.removeChild(currentSpan);
+        }
+        currentSpan = nextSpan;
+      }, 500); // matches CSS transition duration
+
+      step++;
+      if (step > 3) step = 1;
+    }
+
+    // Initial transition to first loading message
+    updateLoadingText();
+
+    // Cycle every 3 seconds
+    const loadingInterval = setInterval(updateLoadingText, 3000);
 
     try {
       const payload = {
@@ -268,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Calculate the fee again just in case or grab from context if needed. 
         // The Monthly Fee logic: 19.90 + (tier - 1) * 20
         monthlyFee: 19.90 + (currentTier - 1) * 20,
-        riskLevel: parseInt(riskSlider.value)
+        riskLevel: 30
       };
 
       const response = await fetch(CREATE_CHECKOUT_ENDPOINT, {
@@ -294,21 +223,19 @@ document.addEventListener("DOMContentLoaded", function () {
       const data = await response.json();
 
       if (data && data.checkout_url) {
+        clearInterval(loadingInterval); // Stop cycling clearly before redirect
         window.location.href = data.checkout_url;
       } else {
         throw new Error("No checkout URL received");
       }
 
     } catch (error) {
+      clearInterval(loadingInterval); // Stop cycling on error
       console.error("Checkout error:", error);
       alert(`Error: ${error.message}`); // Show specific error to user
 
       // Reset button state
       ctaButton.disabled = false;
-      // Re-apply translation or original text
-      // Since we don't have a reliable way to get the original translation text easily without re-running `t()`, 
-      // let's try to fetch it again or just reload the page/state. 
-      // Actually, t() is available globally as seen in updateRiskUI.
       ctaButton.querySelector("span").textContent = t("cta_button");
     }
   }
@@ -316,24 +243,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // Event listeners
   if (input) {
     input.addEventListener("input", updatePricing);
-    input.value = "10000";
+    input.value = "1000";
     updatePricing();
   }
 
-  if (riskToggleBtn) {
-    riskToggleBtn.addEventListener("click", toggleRiskPanel);
-  }
 
-  if (acknowledgeCheckbox) {
-    acknowledgeCheckbox.addEventListener("change", handleAcknowledge);
-  }
-
-  if (riskSlider) {
-    riskSlider.addEventListener("input", function () {
-      updateRiskUI(parseInt(this.value));
-    });
-    updateRiskUI(30);
-  }
 
   if (ctaButton) {
     ctaButton.addEventListener("click", handleCTAClick);

@@ -1,8 +1,8 @@
 // Translations
 const translations = {
   en: {
-    title_line1: "BUILD",
-    title_line2: "YOUR PLAN",
+    title_line1: "START",
+    title_line2: "YOUR JOURNEY",
     subtitle: "Built for scale — discover how much you can earn with our projection tool",
     capital_label: "Capital (EUR)",
     capital_placeholder: "Enter your capital, for example 10 000",
@@ -28,12 +28,16 @@ const translations = {
     disclaimer: "* Based on 7.11% average monthly performance at 30% risk level. Past performance does not guarantee future results.",
     error_invalid: "Please enter a valid amount.",
     error_min: "Minimum capital: 1 000 €",
-    error_max: "Contact us for amounts above 250 000 €"
+    error_max: "Contact us for amounts above 250 000 €",
+    nav_need_help: "Need Help?",
+    loading_step1: "Redirecting you...",
+    loading_step2: "Taking a bit longer...",
+    loading_step3: "Almost there..."
   },
   fr: {
-    title_line1: "CRÉEZ",
-    title_line2: "VOTRE PLAN",
-    subtitle: "Conçu pour l'échelle — découvrez combien vous pouvez gagner avec notre outil de projection",
+    title_line1: "DÉMARREZ",
+    title_line2: "L'AVENTURE",
+    subtitle: "Indiquez le montant avec lequel vous souhaitez démarrer, on s'occupe du reste.",
     capital_label: "Capital (EUR)",
     capital_placeholder: "Entrez votre capital, par exemple 10 000",
     capital_range: "Tranche de capital",
@@ -58,7 +62,11 @@ const translations = {
     disclaimer: "* Basé sur une performance mensuelle moyenne de 7,11% au niveau de risque 30%. Les performances passées ne garantissent pas les résultats futurs.",
     error_invalid: "Veuillez entrer un montant valide.",
     error_min: "Capital minimum : 1 000 €",
-    error_max: "Contactez-nous pour les montants supérieurs à 250 000 €"
+    error_max: "Contactez-nous pour les montants supérieurs à 250 000 €",
+    nav_need_help: "Besoin d'aide ?",
+    loading_step1: "Nous vous redirigeons...",
+    loading_step2: "C'est un rien long...",
+    loading_step3: "Ça arrive bientôt..."
   }
 };
 
@@ -81,7 +89,7 @@ function t(key) {
 function applyTranslations() {
   // Update document language
   document.documentElement.lang = currentLang;
-  
+
   // Translate elements with data-i18n attribute
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
@@ -89,7 +97,7 @@ function applyTranslations() {
       el.textContent = translations[currentLang][key];
     }
   });
-  
+
   // Translate placeholders
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     const key = el.getAttribute('data-i18n-placeholder');
