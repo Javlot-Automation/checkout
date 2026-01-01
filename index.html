@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Javlot - Checkout</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="page-container">
+    <header class="page-header">
+      <h1 class="page-title"><span data-i18n="title_line1">Build</span><br><span data-i18n="title_line2">Your Plan</span></h1>
+      <p class="page-subtitle" data-i18n="subtitle">Built for scale — discover how much you can earn with our projection tool</p>
+    </header>
+
+    <main class="javlot-pricing-widget">
+      <div class="jp-input-block">
+        <label for="jp-capital-input" class="jp-label" data-i18n="capital_label">Capital (EUR)</label>
+        <input
+          id="jp-capital-input"
+          class="jp-input"
+          type="text"
+          inputmode="decimal"
+          data-i18n-placeholder="capital_placeholder"
+          placeholder="Enter your capital, for example 10 000"
+        >
+        <div id="jp-message" class="jp-message"></div>
+      </div>
+      
+      <div id="jp-result" class="jp-result-card">
+        <div class="jp-result-row">
+          <span class="jp-result-label" data-i18n="capital_range">Capital range</span>
+          <span id="jp-capital-range" class="jp-result-value"></span>
+        </div>
+        <div class="jp-result-row">
+          <span class="jp-result-label" data-i18n="monthly_fee">Monthly fee</span>
+          <span id="jp-monthly-fee" class="jp-result-value"></span>
+        </div>
+        <div class="jp-result-row">
+          <div class="jp-result-label-group">
+            <span class="jp-result-label" data-i18n="estimated_result">Estimated monthly result*</span>
+            <span class="jp-result-sublabel"><span id="jp-exposure-text">30%</span> <span data-i18n="capital_exposure">capital exposure</span></span>
+          </div>
+          <span id="jp-estimated" class="jp-result-value jp-result-green"></span>
+        </div>
+      </div>
+      
+      <div id="jp-risk-toggle" class="jp-risk-toggle">
+        <button id="jp-risk-toggle-btn" class="jp-risk-toggle-btn">
+          <span data-i18n="adjust_risk">Adjust risk level</span>
+          <svg id="jp-toggle-icon" class="jp-toggle-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div id="jp-risk-section" class="jp-risk-section">
+        <div class="jp-risk-header">
+          <span class="jp-risk-title" data-i18n="risk_level">Risk Level</span>
+          <div class="jp-risk-value-group">
+            <span id="jp-risk-value" class="jp-risk-value">30%</span>
+            <span id="jp-risk-badge" class="jp-risk-badge" data-i18n="recommended">Recommended</span>
+          </div>
+        </div>
+        
+        <div id="jp-slider-wrapper" class="jp-slider-wrapper jp-slider-disabled">
+          <div class="jp-slider-container">
+            <input
+              id="jp-risk-slider"
+              class="jp-risk-slider"
+              type="range"
+              min="15"
+              max="100"
+              value="30"
+              step="1"
+              disabled
+            >
+            <div class="jp-slider-track">
+              <div id="jp-slider-fill" class="jp-slider-fill"></div>
+            </div>
+            <div id="jp-slider-thumb" class="jp-slider-thumb"></div>
+          </div>
+          
+          <div class="jp-risk-labels">
+            <span>15%</span>
+            <span>100%</span>
+          </div>
+        </div>
+        
+        <label id="jp-acknowledge" class="jp-acknowledge">
+          <div class="jp-toggle-switch">
+            <input type="checkbox" id="jp-acknowledge-checkbox" class="jp-toggle-input">
+            <span class="jp-toggle-slider"></span>
+          </div>
+          <span class="jp-acknowledge-text" data-i18n="acknowledge_text">I understand that 30% is the recommended level and increasing it will expose my capital to higher risk</span>
+        </label>
+        
+        <div id="jp-risk-warning" class="jp-risk-warning">
+          <svg class="jp-warning-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+          </svg>
+          <span id="jp-warning-text">High exposure — increased risk of drawdowns</span>
+        </div>
+      </div>
+      
+      <div id="jp-cta-section" class="jp-cta-section">
+        <label class="jp-terms-checkbox">
+          <input type="checkbox" id="jp-terms-checkbox">
+          <span class="jp-terms-checkmark"></span>
+          <span class="jp-terms-text">
+            <span data-i18n="terms_text">By starting your free trial, you agree to our</span>
+            <a href="https://javlot.io/terms-of-use" target="_blank" data-i18n="terms_tou">Terms of Use</a>,
+            <a href="https://javlot.io/terms-of-sale" target="_blank" data-i18n="terms_tos">Terms of Sale</a>
+            <span data-i18n="terms_and">and</span>
+            <a href="https://javlot.io/privacy-policy" target="_blank" data-i18n="terms_privacy">Privacy Policy</a>.
+          </span>
+        </label>
+        <button id="jp-cta-button" class="jp-cta-button" disabled>
+          <span data-i18n="cta_button">Start 14-Day Free Trial</span>
+        </button>
+      </div>
+      
+      <p id="jp-disclaimer" class="jp-disclaimer" data-i18n="disclaimer">
+        * Based on 7.11% average monthly performance at 30% risk level.
+        Past performance does not guarantee future results.
+      </p>
+    </main>
+
+    <footer class="page-footer">
+      <a href="https://javlot.io" target="_blank">javlot.io</a>
+    </footer>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/pricing.js"></script>
+</body>
+</html>
