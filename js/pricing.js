@@ -1,11 +1,6 @@
-// Configuration - UPDATE THIS WITH YOUR STRIPE PAYMENT LINK
-const STRIPE_BASE_URL = "https://buy.stripe.com/YOUR_STRIPE_LINK";
-
-// You can also configure tier-specific Stripe links if needed
-const STRIPE_TIER_LINKS = {
-  // tier: "stripe_link"
-  // Example: 1: "https://buy.stripe.com/link_for_tier_1",
-};
+// Configuration - AWS Lambda Endpoints
+const API_BASE_URL = "https://bdpzmvhvl4.execute-api.us-west-2.amazonaws.com/Prod";
+const CREATE_CHECKOUT_ENDPOINT = `${API_BASE_URL}/create-checkout`;
 
 document.addEventListener("DOMContentLoaded", function () {
   // DOM Elements
@@ -253,17 +248,61 @@ document.addEventListener("DOMContentLoaded", function () {
     updateRiskUI(parseInt(riskSlider.value));
   }
 
-  // CTA button click - redirect to Stripe
-  function handleCTAClick() {
+  // CTA button click - redirect to Stripe via Lambda
+  async function handleCTAClick() {
     if (currentTier <= 0) return;
-    
-    // Check for tier-specific link first
-    let stripeUrl = STRIPE_TIER_LINKS[currentTier] || STRIPE_BASE_URL;
-    
-    // You can append query parameters if needed
-    // Example: stripeUrl += `?prefilled_promo_code=TRIAL14&client_reference_id=tier_${currentTier}`;
-    
-    window.location.href = stripeUrl;
+    if (ctaButton.disabled) return;
+
+    // Loading state
+    const originalText = ctaButton.querySelector("span").innerText;
+    ctaButton.disabled = true;
+    ctaButton.querySelector("span").innerText = "Loading..."; // Simple loading text
+    // Ideally we would use a translation key here, but for now hardcoded or reused is expected?
+    // Let's stick effectively to "Wait..." or similar if no key exists. 
+    // Actually, I'll keep it simple.
+
+    try {
+      const payload = {
+        tier: currentTier,
+        capital: currentCapitalMin,
+        // Calculate the fee again just in case or grab from context if needed. 
+        // The Monthly Fee logic: 19.90 + (tier - 1) * 20
+        monthlyFee: 19.90 + (currentTier - 1) * 20,
+        riskLevel: parseInt(riskSlider.value)
+      };
+
+      const response = await fetch(CREATE_CHECKOUT_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data && data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL received");
+      }
+
+    } catch (error) {
+      console.error("Checkout error:", error);
+      alert("An error occurred while creating your checkout session. Please try again.");
+      
+      // Reset button state
+      ctaButton.disabled = false;
+      // Re-apply translation or original text
+      // Since we don't have a reliable way to get the original translation text easily without re-running `t()`, 
+      // let's try to fetch it again or just reload the page/state. 
+      // Actually, t() is available globally as seen in updateRiskUI.
+      ctaButton.querySelector("span").textContent = t("cta_button"); 
+    }
   }
 
   // Event listeners
